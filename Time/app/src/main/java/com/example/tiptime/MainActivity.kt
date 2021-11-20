@@ -1,10 +1,8 @@
 package com.example.tiptime
-
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.tiptime.databinding.ActivityMainBinding
 import java.text.NumberFormat
-import kotlin.math.cos
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,15 +16,10 @@ class MainActivity : AppCompatActivity() {
         binding.calculateButton.setOnClickListener { calculateTip() }
     }
 
-    fun calculateTip() {
+    private fun calculateTip() {
 
         val stringIntTextField = binding.costOfService.text.toString()
         val cost = stringIntTextField.toDoubleOrNull()
-
-        if (cost == null) {
-            binding.tipResult.text = ""
-            return
-        }
 
         val selectedId = binding.tipOptions.checkedRadioButtonId
         val tipPercentage = when (selectedId) {
@@ -35,11 +28,10 @@ class MainActivity : AppCompatActivity() {
             else -> 0.15
         }
 
-        var tip = tipPercentage * cost
         val roundUp = binding.roundUpSwitch.isChecked
-        if (roundUp) {
-            tip = kotlin.math.ceil(tip)
-        }
+
+        val tipCalculator = TipCalculator(cost, tipPercentage, roundUp)
+        val tip = tipCalculator.calculateTip()
 
         val formattedTip = NumberFormat.getCurrencyInstance().format(tip)
         binding.tipResult.text = getString(R.string.tip_amount, formattedTip)
@@ -47,3 +39,32 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
+
+
+//    fun calculateTip() {
+//
+//        val stringIntTextField = binding.costOfService.text.toString()
+//        val cost = stringIntTextField.toDoubleOrNull()
+//
+//        if (cost == null) {
+//            binding.tipResult.text = ""
+//            return
+//        }
+//
+//        val selectedId = binding.tipOptions.checkedRadioButtonId
+//        val tipPercentage = when (selectedId) {
+//            R.id.option_twenty_percent -> 0.20
+//            R.id.option_eighteen_percent -> 0.18
+//            else -> 0.15
+//        }
+//
+//        var tip = tipPercentage * cost
+//        val roundUp = binding.roundUpSwitch.isChecked
+//        if (roundUp) {
+//            tip = kotlin.math.ceil(tip)
+//        }
+//
+//        val formattedTip = NumberFormat.getCurrencyInstance().format(tip)
+//        binding.tipResult.text = getString(R.string.tip_amount, formattedTip)
+//
+//    }
